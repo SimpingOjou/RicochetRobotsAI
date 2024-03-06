@@ -1,6 +1,8 @@
 from __future__ import annotations
 from IPython.display import clear_output
 from agent import *
+from plot import *
+import string
 
 class Wall():
     def __init__(self, x: int = 0, y: int = 0, ori: Orientation = Orientation.HORIZONTAL):

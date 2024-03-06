@@ -1,8 +1,6 @@
 import sys
-sys.path.append("Functions")
-import playboard
-import agent
-import plot
+sys.path.append(".\Functions")
+from Functions import *
 
 def test_moving_robot(robot: ElementColor, direction: Directions, start_coord: Coord, end_coord: Coord, plot=False):
     assert board.get_robot(robot).get_coord() == start_coord, f"expected starting coord {start_coord} but got {board.get_robot(robot).get_coord()} instead"
