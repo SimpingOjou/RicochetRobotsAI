@@ -155,8 +155,8 @@ class Board():
     def get_robot(self, robot_color: ElementColor) -> Robot:
         return self.robots[robot_color]
     
-    def plot(self, pause: float = 0.5):
-        self.plotter.plot(self.height, self.width, self.target, self.robots, self.walls, pause)
+    def plot(self, pause: float = 0.3, block: bool = False):
+        self.plotter.plot(self.height, self.width, self.target, self.robots, self.walls, pause, block)
         
     def wall_exists(self, wall: Wall) -> bool:
         return wall in self.walls
@@ -164,7 +164,7 @@ class Board():
     def robot_exists(self, coord: Coord) -> bool:
         return len(list(filter(lambda robot: robot.get_coord() == coord, self.robots.values()))) > 0
     
-    def move(self, robot: Robot, direction: Directions, plot=False):
+    def move(self, robot: Robot, direction: Directions, plot=True):
         moving_coord = Coord((Directions.LEFT == direction)*(-1) + (Directions.RIGHT == direction)*(1),
                             (Directions.DOWN == direction)*(-1) + (Directions.UP == direction)*(1))
         blocking_wall_orientation = (Orientation.VERTICAL if direction in [Directions.LEFT, Directions.RIGHT]
@@ -183,7 +183,7 @@ class Figure():
     def __init__(self):
         self.fig, self.ax = plt.subplots()
 
-    def plot(self, height:int, width:int, target:Target, robots:Robot, walls:Wall, pause:float):
+    def plot(self, height:int, width:int, target:Target, robots:Robot, walls:Wall, pause:float, block:bool):
         # plot target
         self.ax.scatter(target.get_x() + 0.5, target.get_y() + 0.5, color=target.get_color(), marker='*', s=150)
 
@@ -205,8 +205,12 @@ class Figure():
         plt.title("Ricochet Robots")
         self.ax.grid(True)
         
-        plt.draw()
-        self.fig.canvas.flush_events()
-        plt.pause(pause)
-        self.ax.cla()
+        if block:
+            plt.show(block=True)
+            self.__init__()
+        else: 
+            plt.draw()
+            self.fig.canvas.flush_events()
+            plt.pause(pause)
+            self.ax.cla()
         

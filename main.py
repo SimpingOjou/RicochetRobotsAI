@@ -10,8 +10,8 @@ board.plot()
 
 controlled_robot = ElementColor.GREEN
 #test_moving_robot(controlled_robot, Directions.LEFT, board.get_robot(controlled_robot).get_coord(), True)
-board.move(controlled_robot, Directions.LEFT, True)
-board.plot(2)
+board.move(controlled_robot, Directions.LEFT)
+board.plot(block=True)
 
 # plt.plot()
 # test_moving_robot(ElementColor.YELLOW, Directions.DOWN, Coord(7, 11), Coord(7, 11), True)
