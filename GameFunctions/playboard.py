@@ -1,7 +1,7 @@
 from __future__ import annotations
-from IPython.display import clear_output
+import matplotlib.pyplot as plt
+import numpy as np
 from agent import *
-from plot import *
 import string
 
 class Wall():
@@ -150,20 +150,21 @@ class Board():
             ElementColor.GREEN: Robot(12, 10, ElementColor.GREEN)
         }
         self.target = Target(6, 7, ElementColor.VIOLET)
+        self.plotter = Figure()
         
     def get_robot(self, robot_color: ElementColor) -> Robot:
         return self.robots[robot_color]
     
-    def plot(self):
-        plot(self.height, self.width, self.target, self.robots, self.walls)
+    def plot(self, pause: float = 0.5):
+        self.plotter.plot(self.height, self.width, self.target, self.robots, self.walls, pause)
         
     def wall_exists(self, wall: Wall) -> bool:
         return wall in self.walls
     
     def robot_exists(self, coord: Coord) -> bool:
-        return len(list(filter(lambda robot: robot.get_coord() == coord, board.robots.values()))) > 0
+        return len(list(filter(lambda robot: robot.get_coord() == coord, self.robots.values()))) > 0
     
-    def move(self, robot: RobotColors, direction: Directions, plot=False):
+    def move(self, robot: Robot, direction: Directions, plot=False):
         moving_coord = Coord((Directions.LEFT == direction)*(-1) + (Directions.RIGHT == direction)*(1),
                             (Directions.DOWN == direction)*(-1) + (Directions.UP == direction)*(1))
         blocking_wall_orientation = (Orientation.VERTICAL if direction in [Directions.LEFT, Directions.RIGHT]
@@ -176,7 +177,36 @@ class Board():
             robot_to_move.add_coord(moving_coord)
             blocking_wall.add_coord(moving_coord)
             if (plot):
-                clear_output(wait=True)
                 self.plot()
+
+class Figure():
+    def __init__(self):
+        self.fig, self.ax = plt.subplots()
+
+    def plot(self, height:int, width:int, target:Target, robots:Robot, walls:Wall, pause:float):
+        # plot target
+        self.ax.scatter(target.get_x() + 0.5, target.get_y() + 0.5, color=target.get_color(), marker='*', s=150)
+
+        # plot robots
+        for robot in robots.values():
+            self.ax.scatter(robot.get_x() + 0.5, robot.get_y() + 0.5, c=robot.get_color(), linewidths=0.5, edgecolors='black')
         
+        # plot walls
+        for wall in walls:
+            coord_start = [wall.get_x(), wall.get_x() + int(wall.is_horizontal())]
+            coord_end = [wall.get_y(), wall.get_y() + int(wall.is_vertical())]
+            self.ax.plot(coord_start, coord_end, c="black")
+        
+        # hide tick labels and dashes
+        self.ax.set(xlim=(0, width), xticks=np.arange(1, width), xticklabels=[],
+            ylim=(0, height), yticks=np.arange(1, height), yticklabels=[])
+        self.ax.tick_params(axis='y', colors='white')
+        self.ax.tick_params(axis='x', colors='white')
+        plt.title("Ricochet Robots")
+        self.ax.grid(True)
+        
+        plt.draw()
+        self.fig.canvas.flush_events()
+        plt.pause(pause)
+        self.ax.cla()
         
