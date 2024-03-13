@@ -117,6 +117,9 @@ class BoardElement():
     def __str__(self):
         return "{} coordinates: {}, color: {}".format(self._name, self.get_coord().__str__(), self.get_color())
     
+    def set_coord(self, x, y) -> None:
+        self._coord = Coord(x,y)
+    
 class Robot(BoardElement):
     def __init__(self, x: int, y: int, color: ElementColor):
         super().__init__("Robot", x, y, color)
@@ -187,7 +190,7 @@ class Board():
             ElementColor.RED: Robot(0, 15, ElementColor.RED), 
             ElementColor.BLUE: Robot(1, 13, ElementColor.BLUE),
             ElementColor.YELLOW: Robot(7, 11, ElementColor.YELLOW),
-            ElementColor.GREEN: Robot(12, 10, ElementColor.GREEN)
+            ElementColor.GREEN: Robot(14, 5, ElementColor.GREEN)
         }
         self.target = Target(6, 7, ElementColor.VIOLET)
         self.plotter = Figure()
