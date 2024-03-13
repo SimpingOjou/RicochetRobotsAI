@@ -1,8 +1,48 @@
 from __future__ import annotations
 import matplotlib.pyplot as plt
 import numpy as np
-from agent import *
+from enum import Enum
 import string
+
+class ElementColor(Enum):
+    RED="red"
+    GREEN="green"
+    YELLOW="orange"
+    BLUE="blue"
+    VIOLET="violet"
+
+class Directions(Enum):
+    UP="UP"
+    DOWN="DOWN"
+    LEFT="LEFT"
+    RIGHT="RIGHT"
+    
+class Orientation(Enum):
+    HORIZONTAL=0
+    VERTICAL=1
+
+class Coord():
+    def __init__(self, x: int = 0, y: int = 0):
+        self.x = x
+        self.y = y
+        
+    def __eq__(self, other: Coord) -> bool:
+        return self.x == other.x and self.y == other.y
+
+    def __ne__(self, other: Coord) -> bool:
+        return not self.__eq__(other)
+    
+    def __add__(self, other: Coord) -> Coord:
+        return Coord(self.x + other.x, self.y + other.y)
+    
+    def get_x(self) -> int:
+        return self.x
+    
+    def get_y(self) -> int:
+        return self.y
+    
+    def __str__(self) -> str:
+        return "({},{})".format(self.get_x(), self.get_y())
 
 class Wall():
     def __init__(self, x: int = 0, y: int = 0, ori: Orientation = Orientation.HORIZONTAL):
@@ -173,6 +213,7 @@ class Board():
         blocking_wall_x = moving_coord.get_x() + robot_to_move.get_coord().get_x() + 1 * (direction == Directions.LEFT)
         blocking_wall_y = moving_coord.get_y() + robot_to_move.get_coord().get_y() + 1 * (direction == Directions.DOWN)
         blocking_wall = Wall(blocking_wall_x, blocking_wall_y, blocking_wall_orientation)
+
         while (not self.wall_exists(blocking_wall) and not self.robot_exists(robot_to_move.get_coord() + moving_coord)):
             robot_to_move.add_coord(moving_coord)
             blocking_wall.add_coord(moving_coord)

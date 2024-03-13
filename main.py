@@ -1,12 +1,9 @@
 import sys
-sys.path.append("C:/Users/Simone/Documents/DTU/IntroAI/Project/GameFunctions")
 from playboard import *
-from agent import *
 import matplotlib.pyplot as plt
 
 board = Board()
 board.plot()
-
 
 controlled_robot = ElementColor.GREEN
 #test_moving_robot(controlled_robot, Directions.LEFT, board.get_robot(controlled_robot).get_coord(), True)
