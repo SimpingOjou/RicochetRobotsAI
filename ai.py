@@ -10,14 +10,19 @@ class A_star:
         self.goal = self.board.target.get_coord()
         self.moves = 0
 
-    def h_function(self, state:Coord) -> int:
+    # Cost from the current state to the goal
+    # Heuristic
+    def h_function(self, state:Coord) -> int: 
         return self.manhattan_distance(state, self.goal)
 
+    # Cost of each move is always one 
+    # Cost from initital state to the current state
     def g_function(self) -> int:
-        return self.moves # cost of each move is always one
+        return self.moves 
     
-    def f_function(self, state:Coord):
-        return self.h_function(state) + self.g_function(state)
+    # Function to minimize
+    def f_function(self, state:Coord) -> int:
+        return self.h_function(state) + self.g_function()
     
     def manhattan_distance(self, source:Coord, destination:Coord) -> int:
         return abs(destination.x - source.x) + abs(destination.y - source.y)
@@ -27,15 +32,17 @@ class A_star:
 
         for direction in Directions:
             # Iterate through every possibe f
-            self.board.move(self.robot, direction, plot = False)
-            
-            temp_f = self.f_function(self.robot.get_coord())
-            if f > temp_f:
-                f = temp_f
-                best_direction = direction
+            self.board.move(self.robot.get_element_color(), direction, plot = False)
+
+            print(self.board.get_blocking_wall(self.robot.get_element_color(), direction).get_coord())
+            if self.board.get_blocking_wall(self.robot.get_element_color(), direction).get_coord() == self.robot.get_coord():
+                temp_f = self.f_function(self.robot.get_coord())
+                if temp_f < f:
+                    f = temp_f
+                    best_direction = direction
 
             # Reset
             self.robot.set_coord(state.x, state.y)
 
-        self.board.move(self.robot, best_direction, plot = True)
+        self.board.move(self.robot.get_element_color(), best_direction, plot = True)
         self.moves += 1

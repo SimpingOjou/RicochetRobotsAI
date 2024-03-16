@@ -114,6 +114,9 @@ class BoardElement():
     def get_color(self) -> string:
         return self._color.value
     
+    def get_element_color(self) -> ElementColor:
+        return self._color
+    
     def __str__(self):
         return "{} coordinates: {}, color: {}".format(self._name, self.get_coord().__str__(), self.get_color())
     
@@ -194,6 +197,7 @@ class Board():
         }
         self.target = Target(6, 7, ElementColor.VIOLET)
         self.plotter = Figure()
+        self.finished = False
         
     def get_robot(self, robot_color: ElementColor) -> Robot:
         return self.robots[robot_color]
@@ -207,21 +211,37 @@ class Board():
     def robot_exists(self, coord: Coord) -> bool:
         return len(list(filter(lambda robot: robot.get_coord() == coord, self.robots.values()))) > 0
     
-    def move(self, robot: Robot, direction: Directions, plot=True):
+    def get_blocking_wall(self, robot: Robot, direction: Directions) -> Wall:
         moving_coord = Coord((Directions.LEFT == direction)*(-1) + (Directions.RIGHT == direction)*(1),
-                            (Directions.DOWN == direction)*(-1) + (Directions.UP == direction)*(1))
+                (Directions.DOWN == direction)*(-1) + (Directions.UP == direction)*(1))
         blocking_wall_orientation = (Orientation.VERTICAL if direction in [Directions.LEFT, Directions.RIGHT]
-                                else Orientation.HORIZONTAL)
+                else Orientation.HORIZONTAL)
+    
         robot_to_move = self.robots[robot]
         blocking_wall_x = moving_coord.get_x() + robot_to_move.get_coord().get_x() + 1 * (direction == Directions.LEFT)
         blocking_wall_y = moving_coord.get_y() + robot_to_move.get_coord().get_y() + 1 * (direction == Directions.DOWN)
         blocking_wall = Wall(blocking_wall_x, blocking_wall_y, blocking_wall_orientation)
 
+        return blocking_wall
+
+    def move(self, robot: Robot, direction: Directions, plot=True):
+        moving_coord = Coord((Directions.LEFT == direction)*(-1) + (Directions.RIGHT == direction)*(1),
+                (Directions.DOWN == direction)*(-1) + (Directions.UP == direction)*(1))
+        robot_to_move = self.robots[robot]
+        blocking_wall = self.get_blocking_wall(robot, direction)
+
         while (not self.wall_exists(blocking_wall) and not self.robot_exists(robot_to_move.get_coord() + moving_coord)):
-            robot_to_move.add_coord(moving_coord)
-            blocking_wall.add_coord(moving_coord)
-            if (plot):
-                self.plot()
+            if robot_to_move.get_coord() == self.target.get_coord():
+                if plot:
+                    self.plot(block = True)
+                    self.finished = True
+                    self.winner = robot_to_move
+                break
+            else:
+                robot_to_move.add_coord(moving_coord)
+                blocking_wall.add_coord(moving_coord)
+                if plot:
+                    self.plot()
 
 class Figure():
     def __init__(self):

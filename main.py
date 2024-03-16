@@ -4,12 +4,19 @@ from ai import *
 import matplotlib.pyplot as plt
 
 board = Board()
-board.plot()
+board.plot(block=False)
 
-ai = A_star(board, board.robots[ElementColor.GREEN])
+player_1 = A_star(board, board.robots[ElementColor.GREEN])
+player_2 = A_star(board, board.robots[ElementColor.YELLOW])
 
-while not (ai.robot.get_coord() == ai.goal):
-    ai.traverse(ai.robot.get_coord())
+while not board.finished:
+    #player_1.traverse(player_1.robot.get_coord())
+    player_2.traverse(player_2.robot.get_coord())
+
+print("Game ended.\n")
+print("----------------------------------------------------\n")
+print("Winner: " + board.winner.get_color() + " in " + str(player_1.moves) + " moves!\n")
+print("----------------------------------------------------\n")
 
 # controlled_robot = ElementColor.GREEN
 #test_moving_robot(controlled_robot, Directions.LEFT, board.get_robot(controlled_robot).get_coord(), True)
