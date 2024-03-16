@@ -192,7 +192,7 @@ class Board():
         self.robots = { 
             ElementColor.RED: Robot(0, 15, ElementColor.RED), 
             ElementColor.BLUE: Robot(1, 13, ElementColor.BLUE),
-            ElementColor.YELLOW: Robot(7, 11, ElementColor.YELLOW),
+            ElementColor.YELLOW: Robot(15, 5, ElementColor.YELLOW),
             ElementColor.GREEN: Robot(14, 5, ElementColor.GREEN)
         }
         self.target = Target(6, 7, ElementColor.VIOLET)
@@ -247,7 +247,8 @@ class Figure():
     def __init__(self):
         self.fig, self.ax = plt.subplots()
 
-    def plot(self, height:int, width:int, target:Target, robots:Robot, walls:Wall, pause:float, block:bool):
+    # figure doesn't autoclose with block = True
+    def plot(self, height:int, width:int, target:Target, robots:Robot, walls:Wall, pause:float = 0.1, block:bool = True):
         # plot target
         self.ax.scatter(target.get_x() + 0.5, target.get_y() + 0.5, color=target.get_color(), marker='*', s=150)
 
@@ -268,7 +269,7 @@ class Figure():
         self.ax.tick_params(axis='x', colors='white')
         plt.title("Ricochet Robots")
         self.ax.grid(True)
-        
+
         if block:
             plt.show(block=True)
             self.__init__()
