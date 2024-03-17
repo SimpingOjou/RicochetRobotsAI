@@ -232,10 +232,11 @@ class Board():
 
         while (not self.wall_exists(blocking_wall) and not self.robot_exists(robot_to_move.get_coord() + moving_coord)):
             if robot_to_move.get_coord() == self.target.get_coord():
+                self.finished = True
+                self.winner = robot_to_move
+                
                 if plot:
                     self.plot(block = True)
-                    self.finished = True
-                    self.winner = robot_to_move
                 break
             else:
                 robot_to_move.add_coord(moving_coord)

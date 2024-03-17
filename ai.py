@@ -111,5 +111,34 @@ class A_star:
         self.moves += 1
 
 class DFS:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, board:Board, controlled_robot:Robot) -> None:
+        self.board = board
+        self.robot = controlled_robot
+        self.s0 = self.robot.get_coord()
+        self.cost = 0
+        self.moves = 0
+        self.movelist = []
+        self.map = np.full((16, 16), np.inf)
+
+    def traverse(self, state:Coord) -> None:
+        self.map[state.get_x(), state.get_y()] = -1
+
+        for direction in Directions:
+            if not self.board.wall_exists(self.board.get_blocking_wall(self.robot.get_element_color(), direction)):
+                # Iterate through every possibe f
+                self.board.move(self.robot.get_element_color(), direction, plot = False)
+                self.moves += 1
+                self.cost += 1
+                print("Cost: " + str(self.cost))
+                self.movelist.append(direction)
+
+                if not self.map[self.robot.get_x(), self.robot.get_y()] == -1: 
+                    self.traverse(self.robot.get_coord())
+                else:
+                    # Reset
+                    self.moves -= 1
+                    self.movelist.pop()
+                    self.robot.set_coord(state.x, state.y)
+            
+            if self.board.finished:
+                return
