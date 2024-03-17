@@ -4,7 +4,7 @@ import numpy as np
 # Like A*, but only H is needed
 class GreedyBFS: 
     # Create initial state and goal
-    def __init__(self, board:Board, controlled_robot:Robot) -> None:
+    def __init__(self, board:Board, controlled_robot:Robot, plotter:bool = True) -> None:
         self.board = board
         self.robot = controlled_robot
         self.s0 = self.robot.get_coord()
@@ -12,6 +12,8 @@ class GreedyBFS:
         self.moves = 0
         self.movelist = []
         self.map = np.full((16, 16), np.inf) # if negative, is visited node
+
+        self.plotter = plotter
 
     # Cost from the current state to the goal
     # Heuristic
@@ -52,14 +54,14 @@ class GreedyBFS:
             # Reset
             self.robot.set_coord(state.x, state.y)
 
-        self.board.move(self.robot.get_element_color(), best_direction, plot = True)
+        self.board.move(self.robot.get_element_color(), best_direction, plot = self.plotter)
         self.moves += 1
 
 # "A*" considering the distance as the g function
 # ONLY G CHANGES
 class A_star:
     # Create initial state and goal
-    def __init__(self, board:Board, controlled_robot:Robot) -> None:
+    def __init__(self, board:Board, controlled_robot:Robot, plotter:bool = True) -> None:
         self.board = board
         self.robot = controlled_robot
         self.s0 = self.robot.get_coord()
@@ -67,6 +69,8 @@ class A_star:
         self.moves = 0
         self.movelist = []
         self.map = np.full((16, 16), np.inf) # if negative, is visited node
+
+        self.plotter = plotter
 
     # Cost from the current state to the goal
     # Heuristic
@@ -107,11 +111,11 @@ class A_star:
             # Reset
             self.robot.set_coord(state.x, state.y)
 
-        self.board.move(self.robot.get_element_color(), best_direction, plot = True)
+        self.board.move(self.robot.get_element_color(), best_direction, plot = self.plotter)
         self.moves += 1
 
 class DFS:
-    def __init__(self, board:Board, controlled_robot:Robot) -> None:
+    def __init__(self, board:Board, controlled_robot:Robot, plotter:bool = True) -> None:
         self.board = board
         self.robot = controlled_robot
         self.s0 = self.robot.get_coord()
@@ -120,17 +124,18 @@ class DFS:
         self.movelist = []
         self.map = np.full((16, 16), np.inf)
 
+        self.plotter = plotter
+
     def traverse(self, state:Coord) -> None:
         self.map[state.get_x(), state.get_y()] = -1
 
         for direction in Directions:
             if not self.board.wall_exists(self.board.get_blocking_wall(self.robot.get_element_color(), direction)):
                 # Iterate through every possibe f
-                self.board.move(self.robot.get_element_color(), direction, plot = False)
+                self.board.move(self.robot.get_element_color(), direction, plot = self.plotter)
                 self.moves += 1
                 self.cost += 1
-                print("Cost: " + str(self.cost))
-                self.movelist.append(direction)
+                self.movelist.append(direction.value)
 
                 if not self.map[self.robot.get_x(), self.robot.get_y()] == -1: 
                     self.traverse(self.robot.get_coord())
