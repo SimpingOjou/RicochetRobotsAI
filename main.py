@@ -26,7 +26,7 @@ def endgame_unsolved(moves:int, movelist:list, time:float):
 # Greedy best-first search
 board = Board()
 board.plot(block=False)
-player_1 = GreedyBFS(board, board.robots[ElementColor.GREEN], plotter = False)
+#player_1 = GreedyBFS(board, board.robots[ElementColor.GREEN], plotter = False)
 player_2 = GreedyBFS(board, board.robots[ElementColor.YELLOW], plotter = False)
 elapsed_time = []
 
@@ -53,7 +53,7 @@ print("----------------------------------------------------\n")
 # A*
 board = Board()
 board.plot(block=False)
-player_2 = A_star(board, board.robots[ElementColor.YELLOW])
+player_2 = A_star(board, board.robots[ElementColor.YELLOW], plotter = False)
 elapsed_time = []
 
 try:
@@ -79,7 +79,7 @@ print("----------------------------------------------------\n")
 # DFS
 board = Board()
 board.plot(block=False)
-player_2 = DFS(board, board.robots[ElementColor.YELLOW])
+player_2 = DFS(board, board.robots[ElementColor.YELLOW], plotter = False)
 elapsed_time = []
 
 try:

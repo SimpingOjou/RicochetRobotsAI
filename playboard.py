@@ -192,10 +192,15 @@ class Board():
         self.robots = { 
             ElementColor.RED: Robot(0, 15, ElementColor.RED), 
             ElementColor.BLUE: Robot(1, 13, ElementColor.BLUE),
-            ElementColor.YELLOW: Robot(15, 5, ElementColor.YELLOW),
+            ElementColor.YELLOW: Robot(7, 11, ElementColor.YELLOW),
             ElementColor.GREEN: Robot(14, 5, ElementColor.GREEN)
+            # ElementColor.RED: Robot(0, 15, ElementColor.RED), 
+            # ElementColor.BLUE: Robot(1, 13, ElementColor.BLUE),
+            # ElementColor.YELLOW: Robot(15, 5, ElementColor.YELLOW),
+            # ElementColor.GREEN: Robot(7, 6, ElementColor.GREEN)
         }
-        self.target = Target(6, 7, ElementColor.VIOLET)
+        self.target = Target(4, 6, ElementColor.VIOLET)
+        # self.target = Target(4, 6, ElementColor.VIOLET)
         self.plotter = Figure()
         self.finished = False
         
@@ -272,7 +277,7 @@ class Figure():
         self.ax.grid(True)
 
         if block:
-            plt.show(block=True)
+            plt.show(block = True)
             self.__init__()
         else: 
             plt.draw()

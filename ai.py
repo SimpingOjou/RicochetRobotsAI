@@ -19,15 +19,10 @@ class GreedyBFS:
     # Heuristic
     def h_function(self, state:Coord) -> int: 
         return self.manhattan_distance(state, self.goal)
-
-    # Cost of each move is always one 
-    # Cost from initital state to the current state
-    def g_function(self) -> int:
-        return self.moves 
     
     # Function to minimize
     def f_function(self, state:Coord) -> int:
-        return self.h_function(state) + self.g_function()
+        return self.h_function(state)
     
     def manhattan_distance(self, source:Coord, destination:Coord) -> int:
         return abs(destination.x - source.x) + abs(destination.y - source.y)
