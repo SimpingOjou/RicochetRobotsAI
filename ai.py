@@ -1,4 +1,4 @@
-from playboard import *
+from playboard import Board, Robot, Coord, Directions
 import numpy as np
 
 # Like A*, but only H is needed

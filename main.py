@@ -1,5 +1,5 @@
-from playboard import *
-from ai import *
+from playboard import Board, ElementColor
+from ai import GreedyBFS, A_star, DFS  
 import time
 import sympy as sp
 
@@ -27,7 +27,7 @@ def endgame_unsolved(moves:int, movelist:list, time:float):
 board = Board()
 board.plot(block=False)
 #player_1 = GreedyBFS(board, board.robots[ElementColor.GREEN], plotter = False)
-player_2 = GreedyBFS(board, board.robots[ElementColor.YELLOW], plotter = False)
+player_2 = GreedyBFS(board, board.robots[ElementColor.YELLOW], plotter = True)
 elapsed_time = []
 
 try:
